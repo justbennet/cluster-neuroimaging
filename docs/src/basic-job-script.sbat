@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Submit this job script with
+#     $ subID=<subID> sbatch basic-job-script.sbat
+# e.g.,
+#     $ subID=sub101 sbatch basic-job-script.sbat
+# or set the subID variable to the subject's ID prior to running
+# sbatch.
+
+#---------------------------------------------
+# Slurm preamble
+
+#SBATCH --job-name=generic
+
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=5g
+
+#SBATCH --time=1:00:00
+
+#SBATCH --account=support
+#SBATCH --partition=standard
+#SBATCH --mail-type=NONE
+
+#---------------------------------------------
+# Make sure only and all the software needed for the job is loaded
+module purge
+
+#---------------------------------------------
+# Print useful diagnostic information to the job output file
+my_job_header
+
+#---------------------------------------------
+# Commands to run during the job
+
+# Subject ID will be exported prior to submitting the job
+# e.g., sub-101_ses-BL_T1w.nii.gz
+T1_name=${subID}_ses-BL_T1w
+
+echo "Running brain extraction for $T1_name"
+bet2 ${T1_name}.nii.gz ${T1_name}_brain.nii.gz
